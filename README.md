@@ -14,6 +14,7 @@ As long as the manifest file has not been merged into the krew repository the pr
 plugin can be installed like so:
 
     $ git clone git@github.com:dhiller/kubectl-virt-plugin.git
+    $ cd kubectl-virt-plugin
     $ kubectl krew install --manifest=virt.yaml
     Installing plugin: virt
     CAVEATS:

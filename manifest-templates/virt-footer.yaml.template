@@ -1,0 +1,10 @@
+  shortDescription: controls virtual machine related operations.
+  homepage: https://kubevirt.io
+  caveats: |
+    Usage:
+      kubectl virt
+
+    Documentation:
+      https://kubevirt.io/user-guide/docs/latest/administration/intro.html#client-side-virtctl-deployment
+  description: |
+    virt plugin controls virtual machine related operations on your kubernetes cluster.

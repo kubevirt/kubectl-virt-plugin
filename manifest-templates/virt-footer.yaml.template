@@ -1,10 +1,35 @@
   shortDescription: controls virtual machine related operations.
   homepage: https://kubevirt.io
   caveats: |
-    Usage:
-      kubectl virt
+    virt plugin is a wrapper for virtctl originating from the kubevirt.io project. In order to use virtctl you will
+    need to have kubevirt installed on your kubernetes cluster to use it. See https://kubevirt.io/ for details
 
-    Documentation:
-      https://kubevirt.io/user-guide/docs/latest/administration/intro.html#client-side-virtctl-deployment
+    Run
+
+      kubectl virt help
+
+    to get an overview of the available commands
+
+    See
+
+      https://kubevirt.io/user-guide/docs/latest/using-virtual-machines/graphical-and-console-access.html
+
+    for a usage example
   description: |
-    virt plugin controls virtual machine related operations on your kubernetes cluster.
+    virt plugin is a wrapper for virtctl originating from the kubevirt project. KubeVirt is a virtualization add-on to
+    Kubernetes, i.e. it enables to run existing virtual machines on kubernetes clusters. virtctl controls virtual
+    machine related operations on your kubernetes cluster.
+
+    Kubevirt documentation:
+      Overview:
+        https://kubevirt.io/
+      Installation:
+        https://kubevirt.io/user-guide/docs/latest/administration/intro.html
+      User Guide:
+        https://kubevirt.io/user-guide/docs/latest/welcome/index.html
+      Minikube Quickstart:
+        https://kubevirt.io/quickstart_minikube/
+      Virtctl usage examples:
+        https://kubevirt.io/user-guide/docs/latest/using-virtual-machines/graphical-and-console-access.html
+        https://kubevirt.io/user-guide/docs/latest/using-virtual-machines/expose-service.html
+        https://kubevirt.io/user-guide/docs/latest/using-virtual-machines/virtual-machine-replica-set.html

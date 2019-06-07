@@ -6,5 +6,5 @@
       sha256: "${VIRT_BUNDLE_SHA256}"
       files:
         - from: "/virtctl/${VIRT_BUNDLE_BINARY}"
-          to: "."
-      bin: "./${VIRT_BUNDLE_BINARY}"
+          to: "${VIRT_BUNDLE_BINARY_TARGET}"
+      bin: "${VIRT_BUNDLE_BINARY_TARGET}"

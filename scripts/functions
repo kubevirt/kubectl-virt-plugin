@@ -41,7 +41,9 @@ function download_virtctl_binaries {
     local download_dir
     download_dir="$(get_download_dir)"
 
-    if [ ! -f "$download_dir/fetch_${version}_ok" ]; then
+    local marker_download_ok="$download_dir/fetch_${version}_ok"
+
+    if [ ! -f "$marker_download_ok" ]; then
 
         local download_target_dir
         download_target_dir=$(get_download_dir "$version")
@@ -58,7 +60,7 @@ function download_virtctl_binaries {
         done
 
         # leave mark that we have finished successfully
-        touch "$BASE_DIR/out/fetch_${version}_ok"
+        touch "$marker_download_ok"
     fi
 
     echo "$(get_virtctl_binaries $version)"

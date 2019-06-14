@@ -1,13 +1,22 @@
 # kubectl-virt-plugin
 
-Holds all scripts to prepare packages and manifest file required for publishing the 
+Holds all scripts to create packages and manifest file required for publishing the 
 [virtctl](https://kubevirt.io/user-guide/docs/latest/administration/intro.html#client-side-virtctl-deployment)
-binary as a [krew](https://github.com/kubernetes-sigs/krew) plugin for 
+binary as a [krew](https://krew.dev/) package for 
 [kubectl](https://kubernetes.io/docs/reference/kubectl/overview/).
 
-**Caveat: This is WIP!**
+## What is kubectl virt plugin, what is virtctl, and what is KubeVirt?
 
-## Installing virtctl as a krew plugin
+**kubectl virt plugin** is a wrapper for `virtctl` originating from the KubeVirt project.
+
+[**KubeVirt**](https://kubevirt.io) is a virtualization add-on to Kubernetes, i.e. it enables to run existing virtual machines on Kubernetes 
+clusters. 
+
+virtctl controls virtual machine related operations on your Kubernetes cluster like connecting to the serial and VNC consoles.
+
+See the [KubeVirt user guide](https://kubevirt.io/user-guide) for details.
+
+## Installing virtctl as a kubectl plugin with krew
 
 ### Requirements
 
@@ -16,24 +25,34 @@ binary as a [krew](https://github.com/kubernetes-sigs/krew) plugin for
 
 ### Installing
 
-As long as the manifest file has not been merged into the krew repository the 
-plugin can be installed like so:
+For installation and usage of krew (the package manager for kubectl plugins) refer to its [manual](https://krew.dev/).
 
-    $ wget https://github.com/dhiller/krew-index/raw/master/plugins/virt.yaml
-    $ kubectl krew install --manifest=virt.yaml
+If krew is installed, the virt plugin can be installed:
+
+    $ kubectl krew install virt                  
     
-Output should be
+Output should be:
 
-    Installing plugin: virt
-    CAVEATS:
-    \
-     |  Usage:
-     |    kubectl virt
-     |
-     |  Documentation:
-     |    https://kubevirt.io/user-guide/docs/latest/administration/intro.html#client-side-virtctl-deployment
-    /
-    Installed plugin: virt
+    Updated the local copy of plugin index.        
+    Installing plugin: virt                                                                                                                                                                       
+    CAVEATS:                                                                                       
+    \                                              
+     |  virt plugin is a wrapper for virtctl originating from the KubeVirt project. In order to use virtctl you will
+     |  need to have KubeVirt installed on your Kubernetes cluster to use it. See https://kubevirt.io/ for details
+     |                                             
+     |  Run                                        
+     |                                             
+     |    kubectl virt help                        
+     |                                             
+     |  to get an overview of the available commands                                               
+     |                                             
+     |  See                                        
+     |                                             
+     |    https://kubevirt.io/user-guide/docs/latest/using-virtual-machines/graphical-and-console-access.html
+     |                                             
+     |  for a usage example                        
+    /                                              
+    Installed plugin: virt                         
     
 Now we check the list of installed krew plugins
 
@@ -43,7 +62,9 @@ Now we check the list of installed krew plugins
     /home/dhiller/.krew/bin/kubectl-krew
     /home/dhiller/.krew/bin/kubectl-virt
 
-Then we can use it with kubectl 
+## Using virtctl 
+
+After we have installed the virt plugin we can use it: 
 
     $ kubectl virt                                                                                                                                                                        130 ↵
     Available Commands:
@@ -61,11 +82,11 @@ Then we can use it with kubectl
     Client Version: version.Info{GitVersion:"v0.17.2", GitCommit:"58b5f4c64304f75c58ff0915ce70f9ed641d6629", GitTreeState:"clean", BuildDate:"2019-06-05T09:34:53Z", GoVersion:"go1.11.5", Compiler:"gc", Platform:"linux/amd64"}
     ...
 
-## Package virtctl for krew
+## Creating krew packages after a new KubeVirt release 
 
 Example: prepare a kubectl krew release for `v0.17.2`
 
-1. Execute `scripts/create-release.sh` from the base directory:
+### Execute `scripts/create-release.sh` from the base directory:
 
         $ ./scripts/create-release.sh v0.17.2
         Downloading binaries:
@@ -78,9 +99,9 @@ Example: prepare a kubectl krew release for `v0.17.2`
         ...
         Manifest for dist is <path>/kubectl-virt-plugin/out/release/v0.17.2/virt.yaml
 
-2. Create a GitHub release `v0.17.2` in this repository, adding the `tar.gz` files from 
+### Create a GitHub release `v0.17.2` in this repository, adding the `tar.gz` files from 
 `<path>/kubectl-virt-plugin/out/release/v0.17.2/` 
 
-3. Create a pull request against krew-index using the file
+### Create a pull request against krew-index using the file
 
         <path>/kubectl-virt-plugin/out/release/v0.17.2/virt.yaml

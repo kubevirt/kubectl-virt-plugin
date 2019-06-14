@@ -102,6 +102,8 @@ Example: prepare a kubectl krew release for `v0.17.2`
 ### Create a GitHub release `v0.17.2` in this repository, adding the `tar.gz` files from 
 `<path>/kubectl-virt-plugin/out/release/v0.17.2/` 
 
-### Create a pull request against krew-index using the file
+### Create a pull request against the krew Plugin Index Repository
+
+Create a pull request against [krew-index](https://index.krew.dev/) using the file
 
         <path>/kubectl-virt-plugin/out/release/v0.17.2/virt.yaml

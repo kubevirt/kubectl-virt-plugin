@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-KUBEVIRT_VERSION=$(curl --fail -s https://api.github.com/repos/kubevirt/kubevirt/releases|grep tag_name|sort -V | tail -1 | awk -F':' '{print $2}' | sed 's/,//' | xargs)
+KUBEVIRT_VERSION=$(curl --fail -s 'https://api.github.com/repos/kubevirt/kubevirt/releases'|grep tag_name|head -1 | awk -F':' '{print $2}' | sed 's/,//' | xargs)
 
 [ -z "$KUBEVIRT_VERSION" ] && (echo "Failed to retrieve latest KubeVirt version!" ; exit 1)
 

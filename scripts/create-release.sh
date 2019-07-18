@@ -13,6 +13,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/functions"
 # 2. create release binaries that are consumable from krew (i.e. .tar.gz)
 # 3. calculate the sha256sums
 # 4. envsubst all of these into the virt.yaml
+# 5. test created install package on docker image
 
 [ "$#" -eq 0 ] && usage "version must be provided!"
 [ -z "$1" ] && usage "version must be provided!"
@@ -25,3 +26,6 @@ echo $(create_release_packages "$1")
 
 echo -e "\nCreating manifest yaml file for krew:"
 echo $(create_krew_manifest_yaml "$1")
+
+echo -e "\nTesting package install:"
+echo $(test_linux_install_on_docker "$1")

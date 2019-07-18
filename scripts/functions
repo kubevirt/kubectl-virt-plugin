@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
 SRC_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd || exit 1)
-BASE_DIR=$(cd "$SRC_DIR" && cd ..; pwd || exit 1)
+BASE_DIR=$(
+    cd "$SRC_DIR" && cd ..
+    pwd || exit 1
+)
 
-function usage {
+function usage() {
     local message
     if [ "$#" -gt 0 ]; then
         message="$1"
@@ -17,7 +20,7 @@ EOF
     [ "$#" -eq 0 ] && exit 0 || exit 1
 }
 
-function get_download_dir {
+function get_download_dir() {
     local result
     if [ "$#" -gt 0 ]; then
         result="$BASE_DIR/out/download/$1/"
@@ -27,14 +30,17 @@ function get_download_dir {
     echo "$result"
 }
 
-function get_release_dir {
-    [ "$#" -gt 0 ] || (echo "parameter version missing"; exit 1)
+function get_release_dir() {
+    [ "$#" -gt 0 ] || (
+        echo "parameter version missing"
+        exit 1
+    )
     local result="$BASE_DIR/out/release/$1"
     echo "$result"
 }
 
 # $1: version to download
-function download_virtctl_binaries {
+function download_virtctl_binaries() {
     local version
     version="$1"
 
@@ -50,11 +56,13 @@ function download_virtctl_binaries {
         mkdir -p "$download_target_dir"
 
         local base_url="https://github.com/kubevirt/kubevirt"
-        for download_path in $(curl --fail "$base_url/releases/tag/$version" | \
-            grep -oE "/releases\/.*\/virtctl-$version-(linux|windows|darwin)-amd64(\.exe)?");
-        do
+        for download_path in $(curl --fail "$base_url/releases/tag/$version" |
+            grep -oE "/releases\/.*\/virtctl-$version-(linux|windows|darwin)-amd64(\.exe)?"); do
             (
-                cd "$download_target_dir" || (echo "directory $download_target_dir does not exist!"; exit 1)
+                cd "$download_target_dir" || (
+                    echo "directory $download_target_dir does not exist!"
+                    exit 1
+                )
                 wget "$base_url$download_path"
             )
         done
@@ -66,23 +74,28 @@ function download_virtctl_binaries {
     echo "$(get_virtctl_binaries $version)"
 }
 
-function create_release_packages {
+function create_release_packages() {
     local version
     version="$1"
 
     local release_dir="$BASE_DIR/out/release/$version"
 
-    for binary_file in $(get_virtctl_binaries "$1");
-    do
+    for binary_file in $(get_virtctl_binaries "$1"); do
         chmod +x "$binary_file"
-        [ -f "$binary_file" ] || (echo "binary file $binary_file does not exist!"; exit 1)
+        [ -f "$binary_file" ] || (
+            echo "binary file $binary_file does not exist!"
+            exit 1
+        )
         release_file_name="${binary_file/*\//}.tar.gz"
         if [ ! -f "$release_dir/$release_file_name" ]; then
             archive_dir="$release_dir/virtctl/"
             mkdir -p "$archive_dir"
             cp "$binary_file" "$archive_dir"
             (
-                cd "$release_dir" || (echo "directory $release_dir does not exist!"; exit 1)
+                cd "$release_dir" || (
+                    echo "directory $release_dir does not exist!"
+                    exit 1
+                )
                 tar zcvf "$release_file_name" virtctl/
                 rm -rf "virtctl/"
             )
@@ -92,21 +105,21 @@ function create_release_packages {
     echo "$(get_release_packages "$version")"
 }
 
-function get_virtctl_binaries {
+function get_virtctl_binaries() {
     local version
     version="$1"
 
     echo "$(find "$(get_download_dir $version)" -name 'virtctl*')"
 }
 
-function get_release_packages {
+function get_release_packages() {
     local version
     version="$1"
 
     echo "$(find "$(get_release_dir "$version")" -name 'virtctl*.tar.gz')"
 }
 
-function create_krew_manifest_yaml {
+function create_krew_manifest_yaml() {
     local version
     version="$1"
 
@@ -115,33 +128,63 @@ function create_krew_manifest_yaml {
     if [ ! -f "$output_file" ]; then
 
         export VIRT_VERSION="$version"
-        (cat "$BASE_DIR/manifest-templates/virt-head.yaml.template" | envsubst) > "$output_file"
+        (cat "$BASE_DIR/manifest-templates/virt-head.yaml.template" | envsubst) >"$output_file"
 
-        for release_file in $(get_release_packages "$version");
-        do
-            echo "" >> "$output_file"
+        for release_file in $(get_release_packages "$version"); do
+            echo "" >>"$output_file"
             release_file_sah256sum=$(sha256sum "$release_file" | cut -d ' ' -f 1)
             release_file_name="${release_file##*/}"
             release_file_binary_name="${release_file_name%.tar.gz}"
-            regexp='virtctl-(v[0-9\.]+)-([a-z]+)-([a-z0-9]+)(\.exe)?\.tar\.gz'
+            regexp='virtctl-(v[0-9\.]+)(-rc\.[0-9]+)?-([a-z]+)-([a-z0-9]+)(\.exe)?\.tar\.gz'
 
-            VIRT_OS=$(echo "$release_file_name" | sed -E 's/'"$regexp"'/\2/g')
+            VIRT_OS=$(echo "$release_file_name" | sed -E 's/'"$regexp"'/\3/g')
             export VIRT_OS
-            VIRT_ARCH=$(echo "$release_file_name" | sed -E 's/'"$regexp"'/\3/g')
+            VIRT_ARCH=$(echo "$release_file_name" | sed -E 's/'"$regexp"'/\4/g')
             export VIRT_ARCH
             export VIRT_BUNDLE_URI="https://github.com/dhiller/kubectl-virt-plugin/releases/download/$version/$release_file_name"
             export VIRT_BUNDLE_SHA256="$release_file_sah256sum"
             export VIRT_BUNDLE_BINARY="$release_file_binary_name"
-            VIRT_BUNDLE_BINARY_TARGET="$(echo "$release_file_binary_name" | \
-                        sed -E 's/virtctl-(v[0-9\.]+)-([a-z]+)-([a-z0-9]+)(\.exe)?/virtctl\4/g')"
+            VIRT_BUNDLE_BINARY_TARGET="$(echo "$release_file_binary_name" |
+                sed -E 's/virtctl-(v[0-9\.]+)(-rc\.[0-9]+)?-([a-z]+)-([a-z0-9]+)(\.exe)?/virtctl\5/g')"
             export VIRT_BUNDLE_BINARY_TARGET
-            (cat "$BASE_DIR/manifest-templates/virt-platform.yaml.template" | envsubst) >> "$output_file"
+            (cat "$BASE_DIR/manifest-templates/virt-platform.yaml.template" | envsubst) >>"$output_file"
         done
 
-        echo "" >> "$output_file"
-        (cat "$BASE_DIR/manifest-templates/virt-footer.yaml.template" | envsubst) >> "$output_file"
-
+        echo "" >>"$output_file"
+        (cat "$BASE_DIR/manifest-templates/virt-footer.yaml.template" | envsubst) >>"$output_file"
+    else
+        echo "File $output_file already exists!"
     fi
 
     echo "Manifest for dist is $output_file"
+}
+
+function test_linux_install_on_docker() {
+
+    test_dir="$BASE_DIR/out/test"
+    mkdir -p "$test_dir"
+    cd "$test_dir" || exit 1
+
+    release_dir=$(get_release_dir "$1")
+    cp "$release_dir/virt.yaml" .
+    cp "$release_dir/virtctl-$1-linux-amd64.tar.gz" ./virtctl.tar.gz || (
+        echo "Failed to copy package"
+        exit 1
+    )
+
+    echo "Building docker test image"
+    docker build "$BASE_DIR/test_install" -t kubectl-krew >docker.log 2>&1 || (
+        echo "Failed to build docker image for test"
+        cat docker.log
+        exit 1
+    )
+
+    echo -n "Testing krew package install on docker image: "
+    docker run -v "$(pwd):/virt_package" kubectl-krew:latest kubectl krew install --manifest=/virt_package/virt.yaml --archive=/virt_package/virtctl.tar.gz >test.log 2>&1 || (
+        echo "FAILED"
+        cat test.log
+        exit 1
+    )
+
+    echo "OK"
 }

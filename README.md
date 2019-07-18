@@ -86,20 +86,26 @@ After we have installed the virt plugin we can use it:
 
 Example: prepare a kubectl krew release for `v0.17.2`
 
-### Execute `scripts/create-release.sh` from the base directory:
+### Execute `./scripts/create-latest-release.sh` from the base directory:
 
-        $ ./scripts/create-release.sh v0.17.2
-        Downloading binaries:
-        ...
-        
-        Creating release packages for krew:
-        ...
-        
-        Creating manifest yaml file for krew:
-        ...
-        Manifest for dist is <path>/kubectl-virt-plugin/out/release/v0.17.2/virt.yaml
+    $ ./scripts/create-latest-release.sh
+    Downloading binaries:
+    ...
+    
+    # IMPORTANT: the following lines hold the directories of where the packages have been created!
+    Creating release packages for krew:
+    /home/dhiller/Projects/github.com/dhiller/kubectl-virt-plugin/out/release/v0.17.2/...
+    ...
+    
+    Creating manifest yaml file for krew:
+    ...
+    Manifest for dist is <path>/kubectl-virt-plugin/out/release/v0.17.2/virt.yaml
 
-### Create a GitHub release `v0.17.2` in this repository, adding the `tar.gz` files from 
+    Testing package install:
+    Building docker test image Testing krew package install on docker image: OK
+
+### Create a GitHub release `v0.17.2`
+Create a GitHub release `v0.17.2` in this repository, adding the `tar.gz` files from 
 `<path>/kubectl-virt-plugin/out/release/v0.17.2/` 
 
 ### Create a pull request against the krew Plugin Index Repository

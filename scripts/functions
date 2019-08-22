@@ -116,7 +116,7 @@ function get_release_packages() {
     local version
     version="$1"
 
-    echo "$(find "$(get_release_dir "$version")" -name 'virtctl*.tar.gz')"
+    echo "$(find "$(get_release_dir "$version")" -name 'virtctl*.tar.gz' | sort)"
 }
 
 function create_krew_manifest_yaml() {
@@ -149,8 +149,10 @@ function create_krew_manifest_yaml() {
             export VIRT_BUNDLE_BINARY_TARGET
             (cat "$BASE_DIR/manifest-templates/virt-platform.yaml.template" | envsubst) >>"$output_file"
         done
-
         echo "" >>"$output_file"
+
+        yamllint -d relaxed "$output_file"
+
         (cat "$BASE_DIR/manifest-templates/virt-footer.yaml.template" | envsubst) >>"$output_file"
     else
         echo "File $output_file already exists!"

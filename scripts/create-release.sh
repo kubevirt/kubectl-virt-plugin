@@ -29,3 +29,8 @@ echo $(create_krew_manifest_yaml "$1")
 
 echo -e "\nTesting package install:"
 echo $(test_linux_install_on_docker "$1")
+
+echo -e "\nCreating github release:"
+echo $(create_github_release "$1")
+
+echo -e "\nRelease page is: https://github.com/dhiller/kubectl-virt-plugin/releases/tag/$1"

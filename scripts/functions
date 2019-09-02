@@ -227,6 +227,55 @@ EOF
     done
 }
 
+function create_pull_request() {
+    title="Update virt (KubeVirt virtctl plugin package) to $1"
+    branch_name="bump-virtctl-to-$1"
+
+    (
+        cd "$(get_output_dir)" || (echo "Failed to cd into $(get_output_dir)"; exit 1)
+
+        repo_dir="$(get_output_dir)/krew-index"
+        [ -d "$repo_dir" ] && rm -rf "$repo_dir"
+
+        origin='github.com/kubernetes-sigs/krew-index.git'
+        git clone "https://$origin"
+
+        cd "$repo_dir" || (echo "Failed to cd into $repo_dir"; exit 1)
+        git config user.email "daniel.hiller.1972@gmail.com"
+        git config user.name "Daniel Hiller"
+
+        fork='github.com/dhiller/krew-index.git'
+        git remote add fork "https://$fork"
+
+        git checkout -b "$branch_name"
+
+        cp "$(get_release_dir "$1")/virt.yaml" "$repo_dir"
+        git add virt.yaml
+
+        git commit -m "$title"
+        git push "https://$(get_github_auth)@$fork" || exit 1
+    )
+
+    pr_response=$(
+        curl --silent --fail -u "$(get_github_auth)" -X POST \
+            -H 'Content-Type: text/json; charset=utf-8' \
+            -H 'Accept: application/vnd.github.shadow-cat-preview+json' \
+            "https://api.github.com/repos/kubernetes-sigs/krew-index/pulls" \
+            --data @- 2>&1 << EOF
+{
+    "title": "${title}",
+    "head": "dhiller:${branch_name}",
+    "base": "master",
+    "body": "See https://github.com/kubevirt/kubevirt/releases/tag/${1}",
+    "maintainer_can_modify": true,
+    "draft": true
+}
+EOF
+)
+    pr_url=$(echo "$pr_response" | jq -r ._links.html.href)
+    echo "$pr_url"
+}
+
 function get_github_auth() {
     echo "$(get_github_username):$(get_github_token)"
 }

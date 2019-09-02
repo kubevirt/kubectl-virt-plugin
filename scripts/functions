@@ -23,9 +23,9 @@ EOF
 function get_download_dir() {
     local result
     if [ "$#" -gt 0 ]; then
-        result="$BASE_DIR/out/download/$1/"
+        result="$(get_output_dir)/download/$1/"
     else
-        result="$BASE_DIR/out/download/"
+        result="$(get_output_dir)/download/"
     fi
     echo "$result"
 }
@@ -35,8 +35,12 @@ function get_release_dir() {
         echo "parameter version missing"
         exit 1
     )
-    local result="$BASE_DIR/out/release/$1"
+    local result="$(get_output_dir)/release/$1"
     echo "$result"
+}
+
+function get_output_dir() {
+    echo "$BASE_DIR/out"
 }
 
 # $1: version to download
@@ -195,7 +199,7 @@ function create_github_release() {
     version="$1"
 
     release_response=$(
-        curl --silent --fail -u "dhiller:$GH_KUBECTL_VIRT_PLUGIN_TOKEN" -X POST \
+        curl --silent --fail -u "$(get_github_auth)" -X POST \
             "https://api.github.com/repos/dhiller/kubectl-virt-plugin/releases" \
             -H 'Content-Type: text/json; charset=utf-8' \
             --data @- 2>&1 << EOF
@@ -216,9 +220,21 @@ EOF
     for file in $(get_release_packages $version); do
         platform_filename=$(basename $file)
         target_upload_url=$(echo $upload_url | sed 's/{.*/?name='"$platform_filename"'\&label='"$platform_filename"'/')
-        curl -v --fail -u "dhiller:$GH_KUBECTL_VIRT_PLUGIN_TOKEN" -X POST \
+        curl -v --fail -u "$(get_github_auth)" -X POST \
             -H 'Content-Type: application/gzip' \
             "$target_upload_url" \
             --data-binary "@$file"
     done
+}
+
+function get_github_auth() {
+    echo "$(get_github_username):$(get_github_token)"
+}
+
+function get_github_username() {
+    echo "dhiller"
+}
+
+function get_github_token() {
+    echo "$GH_KUBECTL_VIRT_PLUGIN_TOKEN"
 }

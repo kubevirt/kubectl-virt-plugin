@@ -249,8 +249,8 @@ function create_pull_request() {
 
         git checkout -b "$branch_name"
 
-        cp "$(get_release_dir "$1")/virt.yaml" "$repo_dir"
-        git add virt.yaml
+        cp "$(get_release_dir "$1")/virt.yaml" "$repo_dir/plugins"
+        git add plugins/virt.yaml
 
         git commit -m "$title"
         git push "https://$(get_github_auth)@$fork" || exit 1

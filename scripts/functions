@@ -67,7 +67,8 @@ function download_virtctl_binaries() {
                     echo "directory $download_target_dir does not exist!"
                     exit 1
                 )
-                wget "$base_url$download_path"
+                target_file_name=$(echo $download_path | sed 's/-v0\.21\.\0//g' | sed 's/\/.*\///g')
+                wget "$base_url$download_path" -O "$target_file_name"
             )
         done
 

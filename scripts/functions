@@ -67,7 +67,8 @@ function download_virtctl_binaries() {
                     echo "directory $download_target_dir does not exist!"
                     exit 1
                 )
-                wget "$base_url$download_path"
+                target_file_name=$(echo $download_path | sed 's/-'"$(echo "$version" | sed 's/\./\\./g')"'//g' | sed 's/\/.*\///g')
+                wget "$base_url$download_path" -O "$target_file_name"
             )
         done
 
@@ -139,17 +140,17 @@ function create_krew_manifest_yaml() {
             release_file_sah256sum=$(sha256sum "$release_file" | cut -d ' ' -f 1)
             release_file_name="${release_file##*/}"
             release_file_binary_name="${release_file_name%.tar.gz}"
-            regexp='virtctl-(v[0-9\.]+)(-rc\.[0-9]+)?-([a-z]+)-([a-z0-9]+)(\.exe)?\.tar\.gz'
+            regexp='virtctl-([a-z]+)-([a-z0-9]+)(\.exe)?\.tar\.gz'
 
-            VIRT_OS=$(echo "$release_file_name" | sed -E 's/'"$regexp"'/\3/g')
+            VIRT_OS=$(echo "$release_file_name" | sed -E 's/'"$regexp"'/\1/g')
             export VIRT_OS
-            VIRT_ARCH=$(echo "$release_file_name" | sed -E 's/'"$regexp"'/\4/g')
+            VIRT_ARCH=$(echo "$release_file_name" | sed -E 's/'"$regexp"'/\2/g')
             export VIRT_ARCH
             export VIRT_BUNDLE_URI="https://github.com/dhiller/kubectl-virt-plugin/releases/download/$version/$release_file_name"
             export VIRT_BUNDLE_SHA256="$release_file_sah256sum"
             export VIRT_BUNDLE_BINARY="$release_file_binary_name"
             VIRT_BUNDLE_BINARY_TARGET="$(echo "$release_file_binary_name" |
-                sed -E 's/virtctl-(v[0-9\.]+)(-rc\.[0-9]+)?-([a-z]+)-([a-z0-9]+)(\.exe)?/virtctl\5/g')"
+                sed -E 's/virtctl-([a-z]+)-([a-z0-9]+)(\.exe)?/virtctl\3/g')"
             export VIRT_BUNDLE_BINARY_TARGET
             (cat "$BASE_DIR/manifest-templates/virt-platform.yaml.template" | envsubst) >>"$output_file"
         done
@@ -173,17 +174,20 @@ function test_linux_install_on_docker() {
 
     release_dir=$(get_release_dir "$1")
     cp "$release_dir/virt.yaml" .
-    cp "$release_dir/virtctl-$1-linux-amd64.tar.gz" ./virtctl.tar.gz || (
-        echo "Failed to copy package"
-        exit 1
-    )
+    set
+    cp "$release_dir/virtctl-linux-amd64.tar.gz" ./virtctl.tar.gz || exit 1
 
     echo -n "Testing krew package install on docker image: "
-    docker run -v "$(pwd):/virt_package" dhiller/kubectl-krew@sha256:03c6476f21554787f59fd6bf8d5258f2de48d47b2414d8060034622dd3a8a6cb kubectl krew install --manifest=/virt_package/virt.yaml --archive=/virt_package/virtctl.tar.gz >test.log 2>&1 || (
+    set +e
+    docker run -v "$(pwd):/virt_package" \
+        dhiller/kubectl-krew@sha256:03c6476f21554787f59fd6bf8d5258f2de48d47b2414d8060034622dd3a8a6cb \
+        kubectl krew install --manifest=/virt_package/virt.yaml --archive=/virt_package/virtctl.tar.gz >test.log 2>&1
+    result=$?
+    if [[ "$result" -ne 0 ]]; then
         echo "FAILED"
         cat test.log
         exit 1
-    )
+    fi
 
     echo "OK"
 }
@@ -246,7 +250,7 @@ function create_pull_request() {
         git add plugins/virt.yaml
 
         git commit -m "$title"
-        git push "https://$(get_github_auth)@$fork" || exit 1
+        git push -f "https://$(get_github_auth)@$fork" || exit 1
     )
 
     pr_response=$(

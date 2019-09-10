@@ -84,32 +84,17 @@ After we have installed the virt plugin we can use it:
 
 ## Creating krew packages after a new KubeVirt release 
 
-Example: prepare a kubectl krew release for `v0.17.2`
+Example: prepare a kubectl krew release for a new release
 
-### Execute `./scripts/create-latest-release.sh` from the base directory:
+### `./scripts/create-latest-release.sh`
+
+Just execute `./scripts/create-latest-release.sh` from the base directory. The script will create packages, a yaml file, store them in a new release in GitHub repo and finally create a PR against the `krew-index` repo in draft mode.
 
     $ ./scripts/create-latest-release.sh
     Downloading binaries:
     ...
     
-    # IMPORTANT: the following lines hold the directories of where the packages have been created!
-    Creating release packages for krew:
-    /home/dhiller/Projects/github.com/dhiller/kubectl-virt-plugin/out/release/v0.17.2/...
+    Creating pull request:
     ...
     
-    Creating manifest yaml file for krew:
-    ...
-    Manifest for dist is <path>/kubectl-virt-plugin/out/release/v0.17.2/virt.yaml
-
-    Testing package install:
-    Building docker test image Testing krew package install on docker image: OK
-
-### Create a GitHub release `v0.17.2`
-Create a GitHub release `v0.17.2` in this repository, adding the `tar.gz` files from 
-`<path>/kubectl-virt-plugin/out/release/v0.17.2/` 
-
-### Create a pull request against the krew Plugin Index Repository
-
-Create a pull request against [krew-index](https://index.krew.dev/) using the file
-
-        <path>/kubectl-virt-plugin/out/release/v0.17.2/virt.yaml
+After the script has finished successfully you should see a URL where you will find the created PR, which then just needs to be confirmed that it is reviewable.

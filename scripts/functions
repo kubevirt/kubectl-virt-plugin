@@ -174,17 +174,20 @@ function test_linux_install_on_docker() {
 
     release_dir=$(get_release_dir "$1")
     cp "$release_dir/virt.yaml" .
-    cp "$release_dir/virtctl-$1-linux-amd64.tar.gz" ./virtctl.tar.gz || (
-        echo "Failed to copy package"
-        exit 1
-    )
+    set
+    cp "$release_dir/virtctl-linux-amd64.tar.gz" ./virtctl.tar.gz || exit 1
 
     echo -n "Testing krew package install on docker image: "
-    docker run -v "$(pwd):/virt_package" dhiller/kubectl-krew@sha256:03c6476f21554787f59fd6bf8d5258f2de48d47b2414d8060034622dd3a8a6cb kubectl krew install --manifest=/virt_package/virt.yaml --archive=/virt_package/virtctl.tar.gz >test.log 2>&1 || (
+    set +e
+    docker run -v "$(pwd):/virt_package" \
+        dhiller/kubectl-krew@sha256:03c6476f21554787f59fd6bf8d5258f2de48d47b2414d8060034622dd3a8a6cb \
+        kubectl krew install --manifest=/virt_package/virt.yaml --archive=/virt_package/virtctl.tar.gz >test.log 2>&1
+    result=$?
+    if [[ "$result" -ne 0 ]]; then
         echo "FAILED"
         cat test.log
         exit 1
-    )
+    fi
 
     echo "OK"
 }

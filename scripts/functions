@@ -250,7 +250,7 @@ function create_pull_request() {
         git add plugins/virt.yaml
 
         git commit -m "$title"
-        git push "https://$(get_github_auth)@$fork" || exit 1
+        git push -f "https://$(get_github_auth)@$fork" || exit 1
     )
 
     pr_response=$(

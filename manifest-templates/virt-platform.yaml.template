@@ -7,4 +7,6 @@
       files:
         - from: "/virtctl/${VIRT_BUNDLE_BINARY}"
           to: "${VIRT_BUNDLE_BINARY_TARGET}"
+        - from: virtctl/LICENSE
+          to: .
       bin: "${VIRT_BUNDLE_BINARY_TARGET}"

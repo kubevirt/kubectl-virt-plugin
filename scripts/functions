@@ -80,22 +80,28 @@ function download_virtctl_binaries() {
 }
 
 function create_release_packages() {
+    if [ ! -f "$BASE_DIR/LICENSE" ]; then
+        echo "File $BASE_DIR/LICENSE is missing!"
+        exit 1
+    fi
+
     local version
     version="$1"
 
     local release_dir="$BASE_DIR/out/release/$version"
 
     for binary_file in $(get_virtctl_binaries "$1"); do
-        chmod +x "$binary_file"
         [ -f "$binary_file" ] || (
             echo "binary file $binary_file does not exist!"
             exit 1
         )
+        chmod +x "$binary_file"
         release_file_name="${binary_file/*\//}.tar.gz"
         if [ ! -f "$release_dir/$release_file_name" ]; then
             archive_dir="$release_dir/virtctl/"
             mkdir -p "$archive_dir"
             cp "$binary_file" "$archive_dir"
+            cp "$BASE_DIR/LICENSE" "$archive_dir"
             (
                 cd "$release_dir" || (
                     echo "directory $release_dir does not exist!"

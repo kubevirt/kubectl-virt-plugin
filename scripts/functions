@@ -80,10 +80,17 @@ function download_virtctl_binaries() {
 }
 
 function create_release_packages() {
-    if [ ! -f "$BASE_DIR/LICENSE" ]; then
-        echo "File $BASE_DIR/LICENSE is missing!"
+
+    local tmp_dir current_dir
+    tmp_dir=$(mktemp -d)
+    current_dir=$(pwd)
+    cd "$tmp_dir"
+    wget https://raw.githubusercontent.com/kubevirt/kubevirt/master/LICENSE
+    cd "$current_dir"
+    [ -f "$tmp_dir/LICENSE" ] || (
+        echo "failed to fetch license from original repository"
         exit 1
-    fi
+    )
 
     local version
     version="$1"
@@ -101,7 +108,7 @@ function create_release_packages() {
             archive_dir="$release_dir/virtctl/"
             mkdir -p "$archive_dir"
             cp "$binary_file" "$archive_dir"
-            cp "$BASE_DIR/LICENSE" "$archive_dir"
+            cp "$tmp_dir/LICENSE" "$archive_dir"
             (
                 cd "$release_dir" || (
                     echo "directory $release_dir does not exist!"

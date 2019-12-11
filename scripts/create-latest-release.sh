@@ -12,7 +12,7 @@ KUBEVIRT_VERSION=$(curl --fail -s https://api.github.com/repos/kubevirt/kubevirt
 set +e
 release=$(
     curl --silent --fail \
-        "https://api.github.com/repos/dhiller/kubectl-virt-plugin/releases/tags/$KUBEVIRT_VERSION" \
+        "https://api.github.com/repos/kubevirt/kubectl-virt-plugin/releases/tags/$KUBEVIRT_VERSION" \
         -H 'Content-Type: text/json; charset=utf-8' 2>&1
 )
 result=$?

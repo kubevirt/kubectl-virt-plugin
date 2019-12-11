@@ -159,7 +159,7 @@ function create_krew_manifest_yaml() {
             export VIRT_OS
             VIRT_ARCH=$(echo "$release_file_name" | sed -E 's/'"$regexp"'/\2/g')
             export VIRT_ARCH
-            export VIRT_BUNDLE_URI="https://github.com/dhiller/kubectl-virt-plugin/releases/download/$version/$release_file_name"
+            export VIRT_BUNDLE_URI="https://github.com/kubevirt/kubectl-virt-plugin/releases/download/$version/$release_file_name"
             export VIRT_BUNDLE_SHA256="$release_file_sah256sum"
             export VIRT_BUNDLE_BINARY="$release_file_binary_name"
             VIRT_BUNDLE_BINARY_TARGET="$(echo "$release_file_binary_name" |
@@ -210,7 +210,7 @@ function create_github_release() {
 
     release_response=$(
         curl --silent --fail -u "$(get_github_auth)" -X POST \
-            "https://api.github.com/repos/dhiller/kubectl-virt-plugin/releases" \
+            "https://api.github.com/repos/kubevirt/kubectl-virt-plugin/releases" \
             -H 'Content-Type: text/json; charset=utf-8' \
             --data @- 2>&1 << EOF
 {
@@ -254,7 +254,7 @@ function create_pull_request() {
         git config user.email "daniel.hiller.1972@gmail.com"
         git config user.name "Daniel Hiller"
 
-        fork='github.com/dhiller/krew-index.git'
+        fork='github.com/kubevirt/krew-index.git'
         git remote add fork "https://$fork"
 
         git checkout -b "$branch_name"
@@ -274,7 +274,7 @@ function create_pull_request() {
             --data @- 2>&1 << EOF
 {
     "title": "${title}",
-    "head": "dhiller:${branch_name}",
+    "head": "kubevirt:${branch_name}",
     "base": "master",
     "body": "See https://github.com/kubevirt/kubevirt/releases/tag/${1}",
     "maintainer_can_modify": true,

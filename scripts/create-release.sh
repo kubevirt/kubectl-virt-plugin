@@ -32,7 +32,7 @@ echo $(test_linux_install_on_docker "$1")
 
 echo -e "\nCreating github release:"
 echo $(create_github_release "$1")
-echo -e "\nRelease page is: https://github.com/dhiller/kubectl-virt-plugin/releases/tag/$1"
+echo -e "\nRelease page is: https://github.com/kubevirt/kubectl-virt-plugin/releases/tag/$1"
 
 echo -e "\nCreating pull request:"
 echo $(create_pull_request "$1")

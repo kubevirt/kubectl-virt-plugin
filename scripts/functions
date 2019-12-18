@@ -192,8 +192,8 @@ function test_linux_install_on_docker() {
 
     echo -n "Testing krew package install on docker image: "
     set +e
-    docker run -v "$(pwd):/virt_package" \
-        dhiller/kubectl-krew@sha256:03c6476f21554787f59fd6bf8d5258f2de48d47b2414d8060034622dd3a8a6cb \
+    docker run --privileged --rm -v "$(pwd):/virt_package" \
+        dhiller/kubectl-krew@sha256:e8b04582601b7fe11afa5c9e15f4ed427835b4b99c2578fed16471d2d247167b \
         kubectl krew install --manifest=/virt_package/virt.yaml --archive=/virt_package/virtctl.tar.gz >test.log 2>&1
     result=$?
     if [[ "$result" -ne 0 ]]; then

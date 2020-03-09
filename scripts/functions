@@ -61,7 +61,7 @@ function download_virtctl_binaries() {
 
         local base_url="https://github.com/kubevirt/kubevirt"
         for download_path in $(curl --fail "$base_url/releases/tag/$version" |
-            grep -oE "/releases\/.*\/virtctl-$version-(linux|windows|darwin)-amd64(\.exe)?"); do
+            grep -oE "/releases\/.*\/virtctl-$version-(linux|windows|darwin)-(amd64|x86\_64)(\.exe)?"); do
             (
                 cd "$download_target_dir" || (
                     echo "directory $download_target_dir does not exist!"
@@ -153,7 +153,7 @@ function create_krew_manifest_yaml() {
             release_file_sah256sum=$(sha256sum "$release_file" | cut -d ' ' -f 1)
             release_file_name="${release_file##*/}"
             release_file_binary_name="${release_file_name%.tar.gz}"
-            regexp='virtctl-([a-z]+)-([a-z0-9]+)(\.exe)?\.tar\.gz'
+            regexp='virtctl-([a-z]+)-([a-z0-9\_]+)(\.exe)?\.tar\.gz'
 
             VIRT_OS=$(echo "$release_file_name" | sed -E 's/'"$regexp"'/\1/g')
             export VIRT_OS
@@ -163,7 +163,7 @@ function create_krew_manifest_yaml() {
             export VIRT_BUNDLE_SHA256="$release_file_sah256sum"
             export VIRT_BUNDLE_BINARY="$release_file_binary_name"
             VIRT_BUNDLE_BINARY_TARGET="$(echo "$release_file_binary_name" |
-                sed -E 's/virtctl-([a-z]+)-([a-z0-9]+)(\.exe)?/virtctl\3/g')"
+                sed -E 's/virtctl-([a-z]+)-([a-z0-9\_]+)(\.exe)?/virtctl\3/g')"
             export VIRT_BUNDLE_BINARY_TARGET
             (cat "$BASE_DIR/manifest-templates/virt-platform.yaml.template" | envsubst) >>"$output_file"
         done

@@ -43,6 +43,10 @@ function get_output_dir() {
     echo "$BASE_DIR/out"
 }
 
+function get_manifest_yaml() {
+    echo "$(get_release_dir "$1")/virt.yaml"
+}
+
 # $1: version to download
 function download_virtctl_binaries() {
     local version
@@ -141,7 +145,7 @@ function create_krew_manifest_yaml() {
     local version
     version="$1"
 
-    output_file="$(get_release_dir "$1")/virt.yaml"
+    output_file="$(get_manifest_yaml "$1")"
 
     if [ ! -f "$output_file" ]; then
 
@@ -183,38 +187,35 @@ EOF
 
         (cat "$BASE_DIR/manifest-templates/virt-footer.yaml.template" | envsubst) >>"$output_file"
 
-        validate-krew-manifest -manifest "$output_file"
-    else
-        echo "File $output_file already exists!"
+        yamllint -d relaxed "$output_file"
     fi
-
-    echo "Manifest for dist is $output_file"
+    echo "$output_file"
 }
 
 function test_linux_install_on_docker() {
 
-    test_dir="$BASE_DIR/out/test"
-    mkdir -p "$test_dir"
-    cd "$test_dir" || exit 1
+    (
+        test_dir="$BASE_DIR/out/test"
+        mkdir -p "$test_dir"
+        cd "$test_dir" || exit 1
 
-    release_dir=$(get_release_dir "$1")
-    cp "$release_dir/virt.yaml" .
-    set
-    cp "$release_dir/virtctl-linux-amd64.tar.gz" ./virtctl.tar.gz || exit 1
+        cp "$(get_manifest_yaml "$1")" . || exit 1
+        cp "$(get_release_dir "$1")/virtctl-linux-amd64.tar.gz" ./virtctl.tar.gz || exit 1
 
-    echo -n "Testing krew package install on docker image: "
-    set +e
-    docker run --privileged --rm -v "$(pwd):/virt_package" \
-        dhiller/kubectl-krew@sha256:e8b04582601b7fe11afa5c9e15f4ed427835b4b99c2578fed16471d2d247167b \
-        kubectl krew install --manifest=/virt_package/virt.yaml --archive=/virt_package/virtctl.tar.gz >test.log 2>&1
-    result=$?
-    if [[ "$result" -ne 0 ]]; then
-        echo "FAILED"
-        cat test.log
-        exit 1
-    fi
+        set +e
+        docker run --privileged --rm -v "$(pwd):/virt_package" \
+            dhiller/kubectl-krew@sha256:e8b04582601b7fe11afa5c9e15f4ed427835b4b99c2578fed16471d2d247167b \
+            kubectl krew install --manifest=/virt_package/virt.yaml --archive=/virt_package/virtctl.tar.gz >test.log 2>&1
+        result=$?
+        set -e
+        if [[ "$result" -ne 0 ]]; then
+            echo "FAILED"
+            cat test.log
+            exit $result
+        fi
 
-    echo "OK"
+        echo "OK"
+    ) || exit $?
 }
 
 function create_github_release() {

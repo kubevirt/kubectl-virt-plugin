@@ -19,20 +19,23 @@ source "$(dirname "${BASH_SOURCE[0]}")/functions"
 [ -z "$1" ] && usage "version must be provided!"
 
 echo "Downloading binaries:"
-echo $(download_virtctl_binaries "$1")
+download_virtctl_binaries "$1"
 
 echo -e "\nCreating release packages for krew:"
-echo $(create_release_packages "$1")
+create_release_packages "$1"
 
 echo -e "\nCreating manifest yaml file for krew:"
-echo $(create_krew_manifest_yaml "$1")
+create_krew_manifest_yaml "$1"
 
 echo -e "\nTesting package install:"
-echo $(test_linux_install_on_docker "$1")
+test_linux_install_on_docker "$1"
 
 echo -e "\nCreating github release:"
-echo $(create_github_release "$1")
+create_github_release "$1"
 echo -e "\nRelease page is: https://github.com/kubevirt/kubectl-virt-plugin/releases/tag/$1"
 
+echo -e "\nValidating manifest with release:"
+validate-krew-manifest -manifest "$(get_manifest_yaml "$1")"
+
 echo -e "\nCreating pull request:"
-echo $(create_pull_request "$1")
+create_pull_request "$1"

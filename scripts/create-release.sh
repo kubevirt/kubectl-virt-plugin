@@ -5,6 +5,43 @@ set -euo pipefail
 # shellcheck source=scripts/functions.sh
 source "$(dirname "${BASH_SOURCE[0]}")/functions"
 
+function usage() {
+    cat <<EOF
+create krew packages for virtctl
+
+usage: $0 [-h|--help]
+       $0 [-d|--dry-run] <semver>
+
+    options:
+        -h|--help       show this help text
+        -d|--dry-run    only create packages and test install, do not upload release
+                        and create pull request
+
+    example:
+
+        $0 v0.30.0
+
+        creates krew virt packages from KubeVirt source release v0.30.0
+
+EOF
+}
+
+DRY_RUN=""
+for i in "$@"; do
+    case $i in
+        -d|--dry-run)
+        DRY_RUN="true"
+        shift
+        ;;
+        -h|--help)
+        usage
+        exit 0
+        ;;
+        *)
+        ;;
+    esac
+done
+
 # sketch:
 #
 # 1.    download the binaries from the release
@@ -29,6 +66,11 @@ create_krew_manifest_yaml "$1"
 
 echo -e "\nTesting package install:"
 test_linux_install_on_docker "$1"
+
+if [[ "$DRY_RUN" == "true" ]]; then
+    echo "Dry run - skipping release creation"
+    exit 1
+fi
 
 echo -e "\nCreating github release:"
 create_github_release "$1"

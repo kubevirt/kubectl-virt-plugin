@@ -4,12 +4,6 @@
     virt plugin is a wrapper for virtctl originating from the KubeVirt project. In order to use virtctl you will
     need to have KubeVirt installed on your Kubernetes cluster to use it. See https://kubevirt.io/ for details
 
-    Run
-
-      kubectl virt help
-
-    to get an overview of the available commands
-
     See
 
       https://kubevirt.io/user-guide/docs/latest/using-virtual-machines/graphical-and-console-access.html
@@ -21,8 +15,6 @@
     machine related operations on your Kubernetes cluster like connecting to the serial and VNC consoles.
 
     Kubevirt documentation:
-      Overview:
-        https://kubevirt.io/
       Installation:
         https://kubevirt.io/user-guide/docs/latest/administration/intro.html
       User Guide:

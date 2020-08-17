@@ -172,7 +172,7 @@ EOF
             export VIRT_OS
             VIRT_ARCH=$(echo "$release_file_name" | sed -E 's/'"$regexp"'/\2/g')
             if [[ "$VIRT_ARCH" == "x86_64" ]]; then
-                VIRT_ARCH="386"
+                VIRT_ARCH="amd64"
             fi
             export VIRT_ARCH
             export VIRT_BUNDLE_URI="https://github.com/kubevirt/kubectl-virt-plugin/releases/download/$version/$release_file_name"
@@ -200,7 +200,7 @@ function test_linux_install_on_docker() {
         cd "$test_dir" || exit 1
 
         cp "$(get_manifest_yaml "$1")" . || exit 1
-        cp "$(get_release_dir "$1")/virtctl-linux-amd64.tar.gz" ./virtctl.tar.gz || exit 1
+        cp "$(get_release_dir "$1")/virtctl-linux-x86_64.tar.gz" ./virtctl.tar.gz || exit 1
 
         set +e
         docker run --privileged --rm -v "$(pwd):/virt_package" \

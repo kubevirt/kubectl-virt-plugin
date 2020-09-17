@@ -69,7 +69,7 @@ test_linux_install_on_docker "$1"
 
 if [[ "$DRY_RUN" == "true" ]]; then
     echo "Dry run - skipping release creation"
-    exit 1
+    exit 0
 fi
 
 echo -e "\nCreating github release:"

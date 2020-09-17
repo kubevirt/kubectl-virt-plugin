@@ -204,7 +204,7 @@ function test_linux_install_on_docker() {
 
         set +e
         docker run --privileged --rm -v "$(pwd):/virt_package" \
-            dhiller/kubectl-krew@sha256:e8b04582601b7fe11afa5c9e15f4ed427835b4b99c2578fed16471d2d247167b \
+            dhiller/kubectl-krew@sha256:c70cfa939876c8a8247c9d8c39e1adf5840024ac6b4eb6f21f6cd117e4e700da \
             kubectl krew install --manifest=/virt_package/virt.yaml --archive=/virt_package/virtctl.tar.gz >test.log 2>&1
         result=$?
         set -e

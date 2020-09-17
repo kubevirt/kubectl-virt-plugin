@@ -35,7 +35,8 @@ function get_release_dir() {
         echo "parameter version missing"
         exit 1
     )
-    local result="$(get_output_dir)/release/$1"
+    local result
+    result="$(get_output_dir)/release/$1"
     echo "$result"
 }
 
@@ -148,16 +149,6 @@ function create_krew_manifest_yaml() {
     output_file="$(get_manifest_yaml "$1")"
 
     if [ ! -f "$output_file" ]; then
-
-        if ! which validate-krew-manifest; then
-            cat <<EOF
-Will not be able to validate manifest file, validate-krew-manifest is missing
-
-See https://github.com/kubernetes-sigs/krew/tree/master/cmd/validate-krew-manifest/main.go
-EOF
-            exit 1
-        fi
-
         export VIRT_VERSION="$version"
         (cat "$BASE_DIR/manifest-templates/virt-head.yaml.template" | envsubst) >"$output_file"
 
@@ -239,17 +230,31 @@ function create_github_release() {
 EOF
 )
 
-    release_id=$(echo $release_response | jq -r .url | grep -oE '[0-9]+')
-    upload_url=$(echo $release_response | jq -r .upload_url)
+    upload_url=$(echo "$release_response" | jq -r .upload_url)
 
-    for file in $(get_release_packages $version); do
-        platform_filename=$(basename $file)
+    for file in $(get_release_packages "$version"); do
+        platform_filename=$(basename "$file")
         target_upload_url=$(echo $upload_url | sed 's/{.*/?name='"$platform_filename"'\&label='"$platform_filename"'/')
         curl -v --fail -u "$(get_github_auth)" -X POST \
             -H 'Content-Type: application/gzip' \
             "$target_upload_url" \
             --data-binary "@$file"
     done
+}
+
+function validate_krew_manifest() {
+    local version
+    version="$1"
+
+    if ! command -V validate-krew-manifest; then
+        cat <<EOF
+Will not be able to validate manifest file, validate-krew-manifest is missing
+
+See https://github.com/kubernetes-sigs/krew/tree/master/cmd/validate-krew-manifest/main.go
+EOF
+        exit 1
+    fi
+    validate-krew-manifest -manifest "$(get_manifest_yaml "$version")"
 }
 
 function create_pull_request() {

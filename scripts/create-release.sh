@@ -29,16 +29,16 @@ EOF
 DRY_RUN=""
 for i in "$@"; do
     case $i in
-        -d|--dry-run)
+    -d | --dry-run)
         DRY_RUN="true"
         shift
         ;;
-        -h|--help)
+    -h | --help)
         usage
         exit 0
         ;;
-        *)
-        ;;
+    *) ;;
+
     esac
 done
 
@@ -69,7 +69,7 @@ test_linux_install_on_docker "$1"
 
 if [[ "$DRY_RUN" == "true" ]]; then
     echo "Dry run - skipping release creation"
-    exit 1
+    exit 0
 fi
 
 echo -e "\nCreating github release:"
@@ -77,7 +77,7 @@ create_github_release "$1"
 echo -e "\nRelease page is: https://github.com/kubevirt/kubectl-virt-plugin/releases/tag/$1"
 
 echo -e "\nValidating manifest with release:"
-validate-krew-manifest -manifest "$(get_manifest_yaml "$1")"
+validate_krew_manifest "$1"
 
 echo -e "\nCreating pull request:"
 create_pull_request "$1"

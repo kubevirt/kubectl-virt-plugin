@@ -172,7 +172,7 @@ EOF
             export VIRT_OS
             VIRT_ARCH=$(echo "$release_file_name" | sed -E 's/'"$regexp"'/\2/g')
             if [[ "$VIRT_ARCH" == "x86_64" ]]; then
-                VIRT_ARCH="386"
+                VIRT_ARCH="amd64"
             fi
             export VIRT_ARCH
             export VIRT_BUNDLE_URI="https://github.com/kubevirt/kubectl-virt-plugin/releases/download/$version/$release_file_name"

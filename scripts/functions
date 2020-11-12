@@ -197,7 +197,7 @@ function test_linux_install_on_docker() {
 
         set +e
         docker run --privileged --rm -v "$(pwd):/virt_package" \
-            dhiller/kubectl-krew@sha256:c70cfa939876c8a8247c9d8c39e1adf5840024ac6b4eb6f21f6cd117e4e700da \
+            quay.io/kubevirtci/kubectl-krew@sha256:38945afd781e8301f3390ff3d6f48539831533ce5fdc8707a5ceaff948245d6d \
             kubectl krew install --manifest=/virt_package/virt.yaml --archive=/virt_package/virtctl.tar.gz >test.log 2>&1
         result=$?
         set -e
@@ -311,7 +311,7 @@ function get_github_auth() {
 }
 
 function get_github_username() {
-    echo "dhiller"
+    echo "$GH_KUBECTL_VIRT_PLUGIN_USERNAME"
 }
 
 function get_github_token() {

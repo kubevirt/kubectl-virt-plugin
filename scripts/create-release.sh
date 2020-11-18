@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# shellcheck source=scripts/functions.sh
+# shellcheck source=scripts/functions
 source "$(dirname "${BASH_SOURCE[0]}")/functions"
 
 function usage() {

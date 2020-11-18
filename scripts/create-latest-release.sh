@@ -74,5 +74,6 @@ if [ -n "$DRY_RUN" ]; then
     args="$DRY_RUN $args"
 fi
 
-# shellcheck source=scripts/functions.sh
+# shellcheck source=scripts/create-release.sh
+# shellcheck disable=SC2086
 "$(dirname "${BASH_SOURCE[0]}")/create-release.sh" ${args}

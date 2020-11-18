@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# shellcheck source=scripts/functions.sh
+# shellcheck source=scripts/functions
 source "$(dirname "${BASH_SOURCE[0]}")/functions"
 
 [ "$#" -eq 0 ] && usage "version must be provided!"

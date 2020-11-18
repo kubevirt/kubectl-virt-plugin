@@ -27,7 +27,7 @@ DRY_RUN=""
 for i in "$@"; do
     case $i in
     -d | --dry-run)
-        DRY_RUN="$i"
+        DRY_RUN="$1"
         shift
         ;;
     -h | --help)
@@ -69,5 +69,11 @@ fi
 
 echo "Preparing packages for release $KUBEVIRT_RELEASE_VERSION..."
 
-# shellcheck source=scripts/functions.sh
-"$(dirname "${BASH_SOURCE[0]}")/create-release.sh" "$DRY_RUN" "$KUBEVIRT_RELEASE_VERSION"
+args="$KUBEVIRT_RELEASE_VERSION"
+if [ -n "$DRY_RUN" ]; then
+    args="$DRY_RUN $args"
+fi
+
+# shellcheck source=scripts/create-release.sh
+# shellcheck disable=SC2086
+"$(dirname "${BASH_SOURCE[0]}")/create-release.sh" ${args}

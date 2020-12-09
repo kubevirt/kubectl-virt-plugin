@@ -246,7 +246,7 @@ function validate_krew_manifest() {
     local version
     version="$1"
 
-    if ! command -V validate-krew-manifest; then
+    if [ ! command -V validate-krew-manifest ] -o [ ! command -V kubectl ] ; then
         cat <<EOF
 Will not be able to validate manifest file, validate-krew-manifest is missing
 
@@ -271,8 +271,8 @@ function create_pull_request() {
         git clone "https://$origin"
 
         cd "$repo_dir" || (echo "Failed to cd into $repo_dir"; exit 1)
-        git config user.email "daniel.hiller.1972@gmail.com"
-        git config user.name "Daniel Hiller"
+        git config user.name "$GITHUB_USER"
+        git config user.email "$GITHUB_EMAIL"
 
         fork='github.com/kubevirt/krew-index.git'
         git remote add fork "https://$fork"
@@ -307,13 +307,5 @@ EOF
 }
 
 function get_github_auth() {
-    echo "$(get_github_username):$(get_github_token)"
-}
-
-function get_github_username() {
-    echo "$GH_KUBECTL_VIRT_PLUGIN_USERNAME"
-}
-
-function get_github_token() {
-    echo "$GH_KUBECTL_VIRT_PLUGIN_TOKEN"
+    echo "$GITHUB_USER:$(bash "$GIT_ASKPASS")"
 }

@@ -1,4 +1,4 @@
-FROM gcr.io/k8s-testimages/bootstrap:v20190516-c6832d9
+FROM kubevirtci/bootstrap:v20201119-a5880e0
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends --no-upgrade \

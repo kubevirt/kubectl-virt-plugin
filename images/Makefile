@@ -22,6 +22,9 @@ build_test_install:
 push_test_install: build_builder build_test_install
 	$(CONTAINER_ENGINE) push $(REPO)/$(TEST_INSTALL_IMAGE_NAME):$(TAG)
 
+.PHONY: build_all
+build_all: build_builder build_test_install
+
 .PHONY: push_all
 push_all: push_builder push_test_install
 

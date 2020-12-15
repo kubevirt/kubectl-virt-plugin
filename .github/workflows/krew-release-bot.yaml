@@ -1,0 +1,11 @@
+name: krew-release-bot
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+jobs:
+  run-krew-release-bot:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Update new version in krew-index
+      uses: rajatjindal/krew-release-bot@v0.0.38

@@ -31,9 +31,3 @@ RUN mkdir -p /gimme && curl -sL \
     HOME=/gimme bash >> /etc/profile.d/gimme.sh
 
 ENV GOPATH="/go" GOBIN="/usr/bin" GO111MODULE="on"
-
-RUN set -x && \
-    . /etc/profile.d/gimme.sh && \
-    go get -v sigs.k8s.io/krew/cmd/validate-krew-manifest@v0.4.0 && \
-    go clean -cache -modcache && \
-    rm -rf /go && mkdir /go

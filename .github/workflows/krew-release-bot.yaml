@@ -6,5 +6,7 @@ jobs:
   run-krew-release-bot:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout
+      uses: actions/checkout@master
     - name: Update new version in krew-index
       uses: rajatjindal/krew-release-bot@v0.0.38

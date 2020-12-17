@@ -8,6 +8,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Update new version in krew-index
-      uses: rajatjindal/krew-plugin-release@v0.0.31
+      uses: rajatjindal/krew-plugin-release@v0.0.38
       with:
         plugin-name: virt

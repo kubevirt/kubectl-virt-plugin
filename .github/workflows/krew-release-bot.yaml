@@ -1,8 +1,7 @@
 name: krew-release-bot
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  release:
+    types: [published]
 jobs:
   run-krew-release-bot:
     runs-on: ubuntu-latest

@@ -1,8 +1,7 @@
 name: krew-release-bot
-on:
-  release:
-    types: [published]
-  workflow_dispatch: []
+on: workflow_dispatch
+  #release:
+  #  types: [published]
 jobs:
   run-krew-release-bot:
     runs-on: ubuntu-latest

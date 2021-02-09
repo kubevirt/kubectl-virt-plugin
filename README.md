@@ -1,5 +1,7 @@
 # kubectl-virt-plugin
 
+![krew-release-bot](https://github.com/kubevirt/kubectl-virt-plugin/workflows/krew-release-bot/badge.svg)
+
 Holds all scripts to create packages and manifest file required for publishing the 
 [virtctl](https://kubevirt.io/user-guide/docs/latest/administration/intro.html#client-side-virtctl-deployment)
 binary as a [krew](https://krew.dev/) package for 

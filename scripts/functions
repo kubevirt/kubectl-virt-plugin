@@ -152,7 +152,7 @@ function create_github_release() {
             --data @- 2>&1 << EOF
 {
   "tag_name": "${version}",
-  "target_commitish": "master",
+  "target_commitish": "main",
   "name": "${version} kubectl virt plugin",
   "body": "See https://github.com/kubevirt/kubevirt/releases/tag/${version}",
   "draft": false,

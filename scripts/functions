@@ -64,8 +64,10 @@ function download_virtctl_binaries() {
         download_target_dir=$(get_download_dir "$version")
         mkdir -p "$download_target_dir"
 
+        # fetch download urls directly from expanded assets page url, example:
+        # https://github.com/kubevirt/kubevirt/releases/expanded_assets/v0.59.1
         local base_url="https://github.com/kubevirt/kubevirt"
-        for download_path in $(curl --fail "$base_url/releases/tag/$version" |
+        for download_path in $(curl --fail "$base_url/releases/expanded_assets/$version" |
             grep -oE "/releases\/.*\/virtctl-$version-(linux|windows|darwin)-(amd64|x86\_64)(\.exe)?"); do
             (
                 cd "$download_target_dir" || (

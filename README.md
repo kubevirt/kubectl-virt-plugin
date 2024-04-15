@@ -80,17 +80,36 @@ After we have installed the virt plugin we can use it:
 
 ## Creating krew packages after a new KubeVirt release 
 
-Example: prepare a kubectl krew release for a new release
+**Note: a [prow job](https://github.com/kubevirt/project-infra/blob/cd56918c29690a1cda96d91a781b948f105c1dd6/github/ci/prow-deploy/files/jobs/kubevirt/kubectl-virt-plugin/kubectl-virt-plugin-periodics.yaml#L2) periodically executes the below script**
 
-### `./scripts/create-latest-release.sh`
+### Latest release
 
-Just execute `./scripts/create-latest-release.sh` from the base directory. The script will create packages, a yaml file, store them in a new release in GitHub repo and finally create a PR against the `krew-index` repo in draft mode.
+To manually prepare a kubectl krew release for a new release
+just execute `./scripts/create-latest-release.sh` from the base directory. The script will create packages and store them in a new release in GitHub repo.
 
-    $ ./scripts/create-latest-release.sh
-    Downloading binaries:
-    ...
-    
-    Creating pull request:
-    ...
+```bash
+$ ./scripts/create-latest-release.sh
+```
+
+Output will be
+```
+Downloading binaries:
+...
+
+Creating pull request:
+...
+```
+
+Creating the release will trigger [a GitHub action](.github/workflows/krew-release-bot.yaml) that then will create a PR against the [`krew-index`](https://github.com/kubernetes-sigs/krew-index) ([example](https://github.com/kubernetes-sigs/krew-index/pull/3677)).
     
 After the script has finished successfully you should see a URL where you will find the created PR, which then just needs to be confirmed that it is reviewable.
+
+### Specific release
+
+Running `./scripts/create-release.sh` with a specific version will generate the release packages and create a release in GitHub.
+
+```bash
+./scripts/create-release.sh v1.2.0
+```
+
+The triggered GitHub actions will then create a PR as described above.

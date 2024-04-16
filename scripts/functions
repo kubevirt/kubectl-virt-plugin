@@ -68,7 +68,7 @@ function download_virtctl_binaries() {
         # https://github.com/kubevirt/kubevirt/releases/expanded_assets/v0.59.1
         local base_url="https://github.com/kubevirt/kubevirt"
         for download_path in $(curl --fail "$base_url/releases/expanded_assets/$version" |
-            grep -oE "/releases\/.*\/virtctl-$version-(linux|windows|darwin)-(amd64|x86\_64)(\.exe)?"); do
+            grep -oE "/releases\/.*\/virtctl-$version-(linux|windows|darwin)-(amd64|x86\_64|arm64)(\.exe)?"); do
             (
                 cd "$download_target_dir" || (
                     echo "directory $download_target_dir does not exist!"

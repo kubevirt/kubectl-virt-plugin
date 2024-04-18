@@ -101,8 +101,6 @@ Creating pull request:
 ```
 
 Creating the release will trigger [a GitHub action](.github/workflows/krew-release-bot.yaml) that then will create a PR against the [`krew-index`](https://github.com/kubernetes-sigs/krew-index) ([example](https://github.com/kubernetes-sigs/krew-index/pull/3677)).
-    
-After the script has finished successfully you should see a URL where you will find the created PR, which then just needs to be confirmed that it is reviewable.
 
 ### Specific release
 

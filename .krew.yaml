@@ -68,7 +68,7 @@ spec:
 
     See
 
-      https://kubevirt.io/user-guide/docs/latest/using-virtual-machines/graphical-and-console-access.html
+      https://kubevirt.io/user-guide/virtual_machines/accessing_virtual_machines/#graphical-and-serial-console-access
 
     for a usage example
   description: |
@@ -78,12 +78,12 @@ spec:
 
     Kubevirt documentation:
       Installation:
-        https://kubevirt.io/user-guide/docs/latest/administration/intro.html
+        https://kubevirt.io/user-guide/operations/installation/
       User Guide:
-        https://kubevirt.io/user-guide/docs/latest/welcome/index.html
+        https://kubevirt.io/user-guide/
       Minikube Quickstart:
         https://kubevirt.io/quickstart_minikube/
       Virtctl usage examples:
-        https://kubevirt.io/user-guide/docs/latest/using-virtual-machines/graphical-and-console-access.html
-        https://kubevirt.io/user-guide/docs/latest/using-virtual-machines/expose-service.html
-        https://kubevirt.io/user-guide/docs/latest/using-virtual-machines/virtual-machine-replica-set.html
+        https://kubevirt.io/user-guide/virtual_machines/accessing_virtual_machines/#graphical-and-serial-console-access
+        https://kubevirt.io/user-guide/virtual_machines/service_objects/#expose-virtualmachineinstance-as-a-loadbalancer-service
+        https://kubevirt.io/user-guide/virtual_machines/replicaset/

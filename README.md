@@ -46,11 +46,7 @@ Output should be:
      |                                             
      |  to get an overview of the available commands                                               
      |                                             
-     |  See                                        
-     |                                             
-     |    https://kubevirt.io/user-guide/docs/latest/using-virtual-machines/graphical-and-console-access.html
-     |                                             
-     |  for a usage example                        
+     |  ...                  
     /                                              
     Installed plugin: virt                         
     

@@ -1,7 +1,0 @@
-apiVersion: krew.googlecontainertools.github.com/v1alpha2
-kind: Plugin
-metadata:
-  name: virt
-spec:
-  version: "${VIRT_VERSION}"
-  platforms:

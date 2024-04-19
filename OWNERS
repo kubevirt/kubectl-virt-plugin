@@ -1,9 +1,11 @@
 filters:
   ".*":
     reviewers:
+      - 0xFelix
       - dhiller
       - stu-gott
     approvers:
+      - 0xFelix
       - dhiller
       - stu-gott
     emeritus_approvers:

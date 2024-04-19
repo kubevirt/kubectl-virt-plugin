@@ -1,14 +1,14 @@
 filters:
   ".*":
     reviewers:
-      - rmohr
-      - stu-gott
+      - 0xFelix
       - dhiller
-      - fgimenez
+      - stu-gott
     approvers:
-      - rmohr
-      - stu-gott
+      - 0xFelix
       - dhiller
-      - fgimenez
+      - stu-gott
     emeritus_approvers:
       - danielBelenky
+      - fgimenez # 2024-04-15
+      - rmohr # 2024-04-15

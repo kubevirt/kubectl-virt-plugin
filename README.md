@@ -111,3 +111,4 @@ Running `./scripts/create-release.sh` with a specific version will generate the 
 ```
 
 The triggered GitHub actions will then create a PR as described above.
+

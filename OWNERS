@@ -3,10 +3,12 @@ filters:
     reviewers:
       - 0xFelix
       - dhiller
+      - dollierp
       - stu-gott
     approvers:
       - 0xFelix
       - dhiller
+      - dollierp
       - stu-gott
     emeritus_approvers:
       - danielBelenky

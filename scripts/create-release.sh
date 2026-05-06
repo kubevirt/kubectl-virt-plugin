@@ -48,9 +48,6 @@ done
 #       source is i.e. https://github.com/kubevirt/kubevirt/releases/tag/v0.17.2
 
 # 2. create release binaries that are consumable from krew (i.e. .tar.gz)
-# 3. calculate the sha256sums
-# 4. envsubst all of these into the virt.yaml
-# 5. test created install package on docker image
 
 [ "$#" -eq 0 ] && usage "version must be provided!"
 [ -z "$1" ] && usage "version must be provided!"

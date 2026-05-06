@@ -44,10 +44,6 @@ function get_output_dir() {
     echo "$BASE_DIR/out"
 }
 
-function get_manifest_yaml() {
-    echo "$(get_release_dir "$1")/virt.yaml"
-}
-
 # $1: version to download
 function download_virtctl_binaries() {
     local version
